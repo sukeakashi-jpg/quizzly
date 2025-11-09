@@ -266,46 +266,107 @@ const BANK = {
   'Science': [
     { q:'What is the basic unit of life?', opts:['Atom','Cell','Molecule','Organ'], a:1 },
     { q:'Which gas do we mainly breathe?', opts:['Nitrogen','Oxygen','Hydrogen','Carbon dioxide'], a:1 },
-    { q:'What force keeps us on the ground?', opts:['Magnetism','Gravity','Friction','Electricity'], a:1 }
+    { q:'What force keeps us on the ground?', opts:['Magnetism','Gravity','Friction','Electricity'], a:1 },
+    { q:'What planet is closest to the Sun?', opts:['Venus','Mercury','Mars','Earth'], a:1 },
+    { q:'What organ pumps blood through the body?', opts:['Liver','Lungs','Heart','Kidney'], a:2 },
+    { q:'Which vitamin do we get from sunlight?', opts:['Vitamin C','Vitamin D','Vitamin A','Vitamin B12'], a:1 },
+    { q:'What is H2O?', opts:['Salt','Water','Hydrogen peroxide','Oxygen'], a:1 },
+    { q:'What gas do plants release during photosynthesis?', opts:['Oxygen','Carbon dioxide','Nitrogen','Hydrogen'], a:0 },
+    { q:'Which scientist proposed the theory of relativity?', opts:['Newton','Einstein','Galileo','Darwin'], a:1 },
+    { q:'What part of the cell contains genetic material?', opts:['Cytoplasm','Nucleus','Membrane','Mitochondria'], a:1 },
+    { q:'Which blood cells fight infection?', opts:['Red blood cells','White blood cells','Platelets','Plasma'], a:1 },
+    { q:'What metal is liquid at room temperature?', opts:['Mercury','Iron','Gold','Aluminum'], a:0 },
+    { q:'What is the largest organ of the human body?', opts:['Brain','Heart','Skin','Liver'], a:2 },
+    { q:'What process turns liquid water into gas?', opts:['Freezing','Condensation','Evaporation','Melting'], a:2 },
+    { q:'Which planet has rings?', opts:['Earth','Mars','Jupiter','Saturn'], a:3 },
+    { q:'What does DNA stand for?', opts:['Deoxyribonucleic Acid','Dynamic Nitrogen Atom','Double Nucleic Array','Dense Neutral Agent'], a:0 },
   ],
+
   'History': [
     { q:'In which year did Columbus reach America?', opts:['1492','1502','1592','1392'], a:0 },
-    { q:'Who was the first President of the United States?', opts:['Thomas Jefferson','George Washington','Abraham Lincoln','John Adams'], a:1 }
+    { q:'Who was the first President of the United States?', opts:['Thomas Jefferson','George Washington','Abraham Lincoln','John Adams'], a:1 },
+    { q:'In which year did World War II end?', opts:['1942','1945','1948','1950'], a:1 },
+    { q:'Who built the Great Wall of China?', opts:['Ming dynasty','Qin dynasty','Han dynasty','Tang dynasty'], a:1 },
+    { q:'Which empire was ruled by Julius Caesar?', opts:['Greek Empire','Roman Empire','Ottoman Empire','Byzantine Empire'], a:1 },
+    { q:'Who discovered penicillin?', opts:['Louis Pasteur','Alexander Fleming','Isaac Newton','Marie Curie'], a:1 },
+    { q:'Where did the Renaissance begin?', opts:['France','Italy','Spain','England'], a:1 },
+    { q:'Who was known as the Maid of Orléans?', opts:['Cleopatra','Joan of Arc','Queen Victoria','Marie Antoinette'], a:1 },
+    { q:'What year did humans land on the Moon?', opts:['1965','1969','1971','1975'], a:1 },
+    { q:'Who was the first man to circumnavigate the globe?', opts:['Christopher Columbus','Ferdinand Magellan','Marco Polo','Vasco da Gama'], a:1 },
+    { q:'What war was fought between the North and South regions of the U.S.?', opts:['World War I','Civil War','Cold War','Revolutionary War'], a:1 },
+    { q:'Who was the British Prime Minister during World War II?', opts:['Churchill','Thatcher','Blair','Chamberlain'], a:0 },
+    { q:'Which ancient civilization built pyramids?', opts:['Greeks','Romans','Egyptians','Persians'], a:2 },
+    { q:'What wall divided Berlin from 1961 to 1989?', opts:['China Wall','Berlin Wall','Iron Curtain','Cold Wall'], a:1 },
   ],
+
   'Music': [
     { q:'Which instrument has 88 keys?', opts:['Violin','Piano','Guitar','Flute'], a:1 },
-    { q:'Which clef is typically used for low-pitched instruments?', opts:['Treble clef','Alto clef','Bass clef','Soprano clef'], a:2 }
+    { q:'Which clef is typically used for low-pitched instruments?', opts:['Treble','Alto','Bass','Soprano'], a:2 },
+    { q:'Who is known as the King of Pop?', opts:['Elvis Presley','Michael Jackson','Prince','Freddie Mercury'], a:1 },
+    { q:'Which band sang “Bohemian Rhapsody”?', opts:['The Beatles','Queen','ABBA','Led Zeppelin'], a:1 },
+    { q:'What musical symbol means to play loudly?', opts:['p','mp','f','pp'], a:2 },
+    { q:'Which composer became deaf later in life?', opts:['Mozart','Beethoven','Bach','Vivaldi'], a:1 },
+    { q:'What instrument family does the trumpet belong to?', opts:['Woodwind','Percussion','String','Brass'], a:3 },
+    { q:'Which country is famous for reggae music?', opts:['USA','Jamaica','Brazil','Cuba'], a:1 },
+    { q:'Who wrote “The Four Seasons”?', opts:['Vivaldi','Beethoven','Chopin','Mozart'], a:0 },
+    { q:'What is the highest male singing voice?', opts:['Tenor','Bass','Baritone','Alto'], a:0 },
+    { q:'Which rock band was formed by John, Paul, George, and Ringo?', opts:['The Rolling Stones','The Beatles','Pink Floyd','Oasis'], a:1 },
+    { q:'What does “tempo” mean in music?', opts:['Pitch','Speed','Volume','Tone'], a:1 },
+    { q:'Which singer is known for “Shape of You”?', opts:['Bruno Mars','Ed Sheeran','Justin Bieber','Sam Smith'], a:1 },
+    { q:'Which classical composer was born in Salzburg, Austria?', opts:['Beethoven','Mozart','Chopin','Bach'], a:1 },
   ],
+
   'Art': [
     { q:'Who painted the Mona Lisa?', opts:['Van Gogh','Leonardo da Vinci','Picasso','Rembrandt'], a:1 },
-    { q:'Which movement featured abstract forms and geometric shapes?', opts:['Impressionism','Cubism','Romanticism','Surrealism'], a:1 }
+    { q:'Which movement featured abstract forms and geometric shapes?', opts:['Impressionism','Cubism','Romanticism','Surrealism'], a:1 },
+    { q:'Who painted “The Starry Night”?', opts:['Van Gogh','Monet','Cézanne','Matisse'], a:0 },
+    { q:'What material is used for sculptures like Michelangelo’s David?', opts:['Marble','Bronze','Wood','Clay'], a:0 },
+    { q:'Which artist cut off part of his ear?', opts:['Van Gogh','Picasso','Dali','Monet'], a:0 },
+    { q:'Who painted the ceiling of the Sistine Chapel?', opts:['Raphael','Michelangelo','Donatello','Caravaggio'], a:1 },
+    { q:'Which art movement is Salvador Dalí associated with?', opts:['Surrealism','Cubism','Expressionism','Futurism'], a:0 },
+    { q:'What art form uses small pieces of colored glass or stone?', opts:['Mosaic','Fresco','Collage','Graffiti'], a:0 },
+    { q:'Which painter is known for water lilies?', opts:['Monet','Renoir','Manet','Degas'], a:0 },
+    { q:'What is the primary color combination?', opts:['Red, Yellow, Blue','Red, Green, Blue','Cyan, Magenta, Yellow','Orange, Purple, Green'], a:0 },
+    { q:'What does a sculptor primarily do?', opts:['Paints','Draws','Carves','Photographs'], a:2 },
+    { q:'Where is the Louvre Museum located?', opts:['Rome','Madrid','Paris','London'], a:2 },
+    { q:'What does “modern art” refer to?', opts:['Ancient art','19th–20th century art','Baroque art','Classical art'], a:1 },
+    { q:'Which artist is known for abstract drip paintings?', opts:['Pollock','Warhol','Kandinsky','Matisse'], a:0 },
   ],
+
   'Astronomy': [
     { q:'Which planet is known as the Red Planet?', opts:['Venus','Mars','Jupiter','Mercury'], a:1 },
-    { q:'What is the name of our galaxy?', opts:['Andromeda','Milky Way','Sombrero','Whirlpool'], a:1 }
+    { q:'What is the name of our galaxy?', opts:['Andromeda','Milky Way','Sombrero','Whirlpool'], a:1 },
+    { q:'What is the hottest planet in the solar system?', opts:['Mercury','Venus','Mars','Jupiter'], a:1 },
+    { q:'Which planet has the most moons?', opts:['Jupiter','Saturn','Neptune','Uranus'], a:1 },
+    { q:'What star is at the center of our solar system?', opts:['Sirius','Polaris','Sun','Betelgeuse'], a:2 },
+    { q:'What is the term for a rock from space that hits Earth?', opts:['Comet','Asteroid','Meteorite','Star'], a:2 },
+    { q:'Which planet is famous for its rings?', opts:['Neptune','Uranus','Saturn','Jupiter'], a:2 },
+    { q:'What is the closest star to Earth?', opts:['Proxima Centauri','Vega','Sirius','Alpha Centauri'], a:0 },
+    { q:'What galaxy is closest to the Milky Way?', opts:['Andromeda','Whirlpool','Sombrero','Cartwheel'], a:0 },
+    { q:'Which planet is known for its Great Red Spot?', opts:['Mars','Jupiter','Neptune','Saturn'], a:1 },
+    { q:'How long does Earth take to orbit the Sun?', opts:['24 hours','7 days','365 days','30 days'], a:2 },
+    { q:'What do we call a group of stars forming a pattern?', opts:['Galaxy','Constellation','Nebula','Cluster'], a:1 },
+    { q:'Which planet spins on its side?', opts:['Venus','Uranus','Mercury','Earth'], a:1 },
   ],
+
   'Video Games': [
     { q:'Which company makes the PlayStation?', opts:['Microsoft','Nintendo','Sony','Sega'], a:2 },
-    { q:'In classic Mario, what is the name of Mario’s brother?', opts:['Luigi','Wario','Toad','Bowser'], a:0 }
+    { q:'In classic Mario, what is the name of Mario’s brother?', opts:['Luigi','Wario','Toad','Bowser'], a:0 },
+    { q:'What is the highest-selling video game of all time?', opts:['Minecraft','Tetris','GTA V','Fortnite'], a:0 },
+    { q:'Which console introduced the character Master Chief?', opts:['PlayStation','Xbox','GameCube','Dreamcast'], a:1 },
+    { q:'What does “FPS” stand for in gaming?', opts:['Frames Per Second','First Person Shooter','Fast Play Style','Free Player Setting'], a:1 },
+    { q:'Who is the main villain in The Legend of Zelda series?', opts:['Ganondorf','Bowser','Sephiroth','Dr. Robotnik'], a:0 },
+    { q:'Which company created Sonic the Hedgehog?', opts:['Sega','Nintendo','Capcom','Atari'], a:0 },
+    { q:'What is the name of the main character in Halo?', opts:['Marcus Fenix','Master Chief','Shepard','Doomguy'], a:1 },
+    { q:'In Pokémon, who is the electric mascot?', opts:['Charmander','Eevee','Pikachu','Squirtle'], a:2 },
+    { q:'Which game features the battle royale island called Erangel?', opts:['Fortnite','PUBG','Apex Legends','Warzone'], a:1 },
+    { q:'Which video game franchise features Lara Croft?', opts:['Uncharted','Tomb Raider','Assassin’s Creed','Far Cry'], a:1 },
+    { q:'Which company developed “The Legend of Zelda”?', opts:['Sega','Nintendo','Sony','Square Enix'], a:1 },
+    { q:'In Among Us, what color is the emergency button?', opts:['Blue','Red','Yellow','Green'], a:1 },
+    { q:'What year was the first PlayStation released?', opts:['1992','1994','1996','1998'], a:1 },
   ]
 };
 
-/* Minimal Spanish map for translations used (questions and options present above). Extend if needed. */
-const TRANSLATIONS_QS = {
-  "What is the basic unit of life?":"¿Cuál es la unidad básica de la vida?",
-  "What force keeps us on the ground?":"¿Qué fuerza nos mantiene en el suelo?",
-  "Which gas do we mainly breathe?":"¿Qué gas respiramos principalmente?",
-  "In which year did Columbus reach America?":"¿En qué año llegó Colón a América?",
-  "Who was the first President of the United States?":"¿Quién fue el primer presidente de Estados Unidos?",
-  "Which instrument has 88 keys?":"¿Qué instrumento tiene 88 teclas?",
-  "Which clef is typically used for low-pitched instruments?":"¿Qué clave se usa para instrumentos de tono bajo?",
-  "Who painted the Mona Lisa?":"¿Quién pintó la Mona Lisa?",
-  "Which movement featured abstract forms and geometric shapes?":"¿Qué movimiento presentó formas abstractas y geométricas?",
-  "Which planet is known as the Red Planet?":"¿Qué planeta se conoce como el Planeta Rojo?",
-  "What is the name of our galaxy?":"¿Cómo se llama nuestra galaxia?",
-  "Which company makes the PlayStation?":"¿Qué compañía fabrica la PlayStation?",
-  "In classic Mario, what is the name of Mario’s brother?":"En Mario clásico, ¿cómo se llama el hermano de Mario?"
-};
 const TRANSLATIONS_OPTS = {
   "Atom":"Átomo","Cell":"Célula","Molecule":"Molécula","Organ":"Órgano",
   "Nitrogen":"Nitrógeno","Oxygen":"Oxígeno","Hydrogen":"Hidrógeno","Carbon dioxide":"Dióxido de carbono",
@@ -735,5 +796,6 @@ window.addEventListener('beforeunload', saveState);
 </script>
 </body>
 </html>
+
 
 
