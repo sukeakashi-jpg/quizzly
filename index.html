@@ -422,4 +422,20 @@
 
   function showHistory(){renderHistory();showScreen(screenHistory);}
   function renderHistory(){
-    const hist=(state
+    const hist=(state.users[state.current.name]||{history:[]}).history;
+    historyList.innerHTML='';
+    if(hist.length===0){
+      const p=document.createElement('p');p.className='meta';p.textContent='Sin historial aún.';
+      historyList.appendChild(p);return;
+    }
+    hist.slice().reverse().forEach(h=>{
+      const d=document.createElement('div');d.className='hist-item';
+      d.innerHTML=`<span>${h.date}</span><span>${h.topic}</span><span>${h.correct?'✅':'❌'}</span>`;
+      historyList.appendChild(d);
+    });
+  }
+
+  renderApp();
+</script>
+</body>
+</html>
