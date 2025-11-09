@@ -1,223 +1,733 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Quizzly</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Quizzly — Daily Question</title>
+
+<!-- Newsreader + Poppins fallback -->
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,300;0,400;0,600;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
 <style>
-  :root {
-    --beige: #f6efe6;
-    --navy: #0b1c33;
-    --text: #0b1c33;
+  :root{
+    --beige:#f6efe6;
+    --beige-2:#efe7d9;
+    --navy:#0b1c33;
+    --accent:#2f6fae;
+    --muted:#7c7c7c;
+    --card-shadow: 0 18px 40px rgba(11,28,51,0.06);
+    --radius:14px;
+    --glass: rgba(255,255,255,0.9);
+    --anim:.36s;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:"Newsreader", "Poppins", serif;
+    background:var(--beige);
+    color:var(--navy);
+    -webkit-font-smoothing:antialiased;
+    padding:20px;
+    display:flex;
+    justify-content:center;
   }
 
-  body {
-    font-family: "Newsreader", serif;
-    background: var(--beige);
-    color: var(--text);
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    transition: all 0.3s ease;
+  .wrap{width:100%;max-width:460px}
+
+  /* Topbar */
+  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{
+    width:56px;height:56px;border-radius:12px;background:linear-gradient(180deg,var(--beige-2),#fff);
+    display:flex;align-items:center;justify-content:center;box-shadow:var(--card-shadow);border:1px solid rgba(11,28,51,0.04);
+    font-weight:800;color:var(--navy);font-size:20px;
+  }
+  .brand h1{font-size:18px;margin:0}
+  .controls{display:flex;gap:8px;align-items:center}
+
+  .lang-btn, .mute-btn {
+    padding:6px 10px;border-radius:10px;border:1px solid rgba(11,28,51,0.06);background:transparent;cursor:pointer;font-weight:700;color:var(--navy)
+  }
+  .lang-btn.active{background:var(--navy);color:var(--beige);border-color:var(--navy)}
+
+  /* Card */
+  .card{
+    background:linear-gradient(180deg,var(--beige-2),#fff);
+    border-radius:var(--radius);padding:14px;box-shadow:var(--card-shadow);border:1px solid rgba(11,28,51,0.04)
   }
 
-  h1 {
-    font-size: 2.2em;
-    color: var(--navy);
-    margin-bottom: 1em;
-  }
+  .screen{display:none;opacity:0;transform:translateY(8px) scale(.995);transition:opacity var(--anim) ease,transform var(--anim) ease}
+  .screen.active{display:block;opacity:1;transform:none}
 
-  .container {
-    background: #ffffffbb;
-    padding: 2em;
-    border-radius: 20px;
-    box-shadow: 0 4px 20px #0001;
-    max-width: 400px;
-    width: 90%;
-  }
+  /* Splash */
+  #splash{position:fixed;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--beige);z-index:9999}
+  .splash-box{width:360px;max-width:92%;padding:18px;border-radius:14px;background:linear-gradient(180deg,var(--beige-2),#fff);box-shadow:var(--card-shadow);text-align:center}
+  .splash-logo{width:84px;height:84px;border-radius:12px;background:var(--navy);color:var(--beige);display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:30px}
+  .splash-phrase{margin-top:12px;font-style:italic;color:var(--navy);font-size:14px}
+  .splash-loading{margin-top:8px;color:var(--muted);font-size:13px}
 
-  button {
-    background: var(--navy);
-    color: var(--beige);
-    border: none;
-    border-radius: 12px;
-    padding: 12px 20px;
-    font-size: 1em;
-    margin-top: 1em;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
-  }
+  /* Login */
+  .center{display:flex;flex-direction:column;gap:10px;align-items:stretch}
+  input[type="text"]{padding:10px;border-radius:10px;border:1px solid rgba(11,28,51,0.06);background:#fff;font-size:14px;color:var(--navy)}
 
-  button:hover {
-    transform: scale(1.03);
-    background: #142850;
-  }
+  .row{display:flex;gap:8px}
+  .btn{padding:10px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700;background:var(--navy);color:var(--beige);transition:transform .18s ease}
+  .btn:hover{transform:translateY(-3px)}
+  .btn.ghost{background:transparent;color:var(--navy);border:2px solid rgba(11,28,51,0.06)}
 
-  .hidden {
-    display: none;
+  /* Topics */
+  .topics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  .topic{
+    background:var(--beige);padding:12px;border-radius:12px;border:1px solid rgba(11,28,51,0.04);
+    font-weight:700;color:var(--navy);text-align:center;cursor:pointer;transition:transform .18s,box-shadow .18s;
   }
+  .topic:hover{transform:translateY(-6px);box-shadow:0 12px 28px rgba(11,28,51,0.04)}
+  .topic.selected{box-shadow:0 10px 26px rgba(47,111,174,0.12);border-color:var(--accent)}
 
-  .quote {
-    font-style: italic;
-    opacity: 0.8;
-    margin-top: 1em;
+  /* Quiz UI */
+  .question-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .question-text{font-size:18px;font-weight:700;color:var(--navy)}
+  .meta{font-size:12px;color:var(--muted)}
+  .options{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+  .option{
+    background:linear-gradient(180deg,#fff,var(--beige));padding:12px;border-radius:10px;border:1px solid rgba(11,28,51,0.06);
+    cursor:pointer;font-weight:700;color:var(--navy);transition:transform .16s ease,box-shadow .16s ease;
   }
+  .option:hover{transform:translateY(-4px);box-shadow:0 12px 26px rgba(11,28,51,0.04)}
+  .option.disabled{opacity:0.55;pointer-events:none}
+  .option.correct{background:linear-gradient(90deg,#e9f7ee,#e2f3e5);border-color:rgba(47,143,88,0.12)}
+  .option.wrong{background:linear-gradient(90deg,#fff1f0,#ffe6e6);border-color:rgba(181,75,75,0.12)}
 
-  .lang-switch {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: transparent;
-    color: var(--navy);
-    border: 2px solid var(--navy);
-    border-radius: 8px;
-    padding: 6px 10px;
-    font-size: 0.9em;
-    cursor: pointer;
-  }
+  .status{margin-top:10px;font-size:13px;color:var(--muted)}
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  /* Result / Final */
+  .result-title{font-size:18px;font-weight:800;color:var(--navy)}
+  .result-sub{font-size:14px;color:var(--muted);margin-top:8px}
+  .final-encourage{margin-top:12px;font-weight:700;color:var(--accent)}
+  .streak{margin-top:8px;font-size:13px;font-weight:700;color:var(--navy)}
 
-  .fade {
-    animation: fadeIn 1s ease forwards;
+  /* History */
+  .history{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+  .hist-item{display:flex;justify-content:space-between;padding:10px;border-radius:10px;background:#fff;border:1px solid rgba(11,28,51,0.04)}
+  .hist-left{max-width:68%}
+  .hist-topic{font-weight:700}
+  .hist-when{font-size:12px;color:var(--muted);margin-top:6px}
+
+  footer{margin-top:12px;text-align:center;font-size:12px;color:var(--muted)}
+
+  @media (max-width:420px){
+    .wrap{padding:6px}
+    .splash-box{width:92%}
   }
 </style>
 </head>
 <body>
-  <button id="langBtn" class="lang-switch">EN</button>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">QZ</div>
+        <div>
+          <h1>Quizzly</h1>
+          <div class="meta" id="subtitle">Pregunta del día</div>
+        </div>
+      </div>
 
-  <div id="loading" class="container fade">
-    <h1>Quizzly</h1>
-    <p id="quote" class="quote"></p>
+      <div class="controls">
+        <button id="muteBtn" class="lang-btn" title="Mute / Unmute">🔔</button>
+        <button id="btnEN" class="lang-btn active" aria-pressed="true">EN</button>
+        <button id="btnES" class="lang-btn">ES</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <!-- LOGIN SCREEN -->
+      <section id="screen-login" class="screen active" aria-hidden="false">
+        <div class="center">
+          <h2 id="welcomeTitle">Welcome</h2>
+          <p class="meta" id="welcomeMeta">Enter your name to save progress on this device.</p>
+          <input id="inputName" type="text" placeholder="Your name (e.g. Judson)" aria-label="User name">
+          <div class="row">
+            <button id="btnStart" class="btn" style="flex:1">Start</button>
+            <button id="btnGuest" class="btn ghost" style="flex:1">Guest</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TOPIC SELECT -->
+      <section id="screen-topics" class="screen" aria-hidden="true">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <h3 id="chooseTitle">Choose a topic</h3>
+            <p class="meta" id="chooseMeta">Select the category for today's question</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <div id="userShort" style="font-weight:700;color:var(--navy)"></div>
+            <button id="btnLogout" class="btn ghost">Logout</button>
+          </div>
+        </div>
+
+        <div class="topics" id="topics"></div>
+
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button id="btnOpenQuiz" class="btn" style="flex:1">View question</button>
+          <button id="btnHistory" class="btn ghost" style="flex:1">History</button>
+        </div>
+      </section>
+
+      <!-- QUIZ -->
+      <section id="screen-quiz" class="screen" aria-hidden="true">
+        <div class="question-row">
+          <div>
+            <div id="questionText" class="question-text">—</div>
+            <div id="metaInfo" class="meta">Topic • Question of the day</div>
+          </div>
+          <div>
+            <button id="btnChangeTopic" class="btn ghost">Change</button>
+          </div>
+        </div>
+
+        <div class="options" id="options" role="list"></div>
+        <div id="statusText" class="status" aria-live="polite"></div>
+      </section>
+
+      <!-- RESULT -->
+      <section id="screen-result" class="screen" aria-hidden="true">
+        <div style="text-align:center">
+          <div id="resultTitle" class="result-title">—</div>
+          <div id="resultMsg" class="result-sub">—</div>
+          <div id="streakText" class="streak">Streak: 0</div>
+          <div class="final-encourage" id="encourageText">—</div>
+          <div style="height:12px"></div>
+          <button id="btnBackHome" class="btn">Back</button>
+          <div style="height:8px"></div>
+          <button id="btnLogout2" class="btn ghost">Logout</button>
+        </div>
+      </section>
+
+      <!-- HISTORY -->
+      <section id="screen-history" class="screen" aria-hidden="true">
+        <div>
+          <h3 id="historyTitle">History</h3>
+          <p class="meta" id="historyMeta">Your previous answers</p>
+        </div>
+        <div id="historyList" class="history" aria-live="polite"></div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button id="btnBackToTopics" class="btn ghost" style="flex:1">Back</button>
+          <button id="btnClearHistory" class="btn" style="flex:1">Clear history</button>
+        </div>
+      </section>
+    </div>
+
+    <footer id="footerText">Colegio Agropecuario de San Carlos — Diseño de Software — 2025</footer>
   </div>
 
-  <div id="app" class="container hidden fade">
-    <h1 id="question">Question</h1>
-    <div id="answers"></div>
-    <button id="nextBtn" class="hidden"></button>
+  <!-- SPLASH (outside card to overlay) -->
+  <div id="splash" role="status" aria-live="polite">
+    <div class="splash-box" role="img" aria-label="Quizly splash">
+      <div class="splash-logo" aria-hidden="true">QZ</div>
+      <div style="margin-top:12px;font-weight:700;color:var(--navy)">Quizzly</div>
+      <div id="splashPhrase" class="splash-phrase">Focus only on what you can control.</div>
+      <div class="splash-loading">Loading...</div>
+    </div>
   </div>
 
 <script>
-  // === SOUNDS ===
-  const sounds = {
-    click: new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_3c9ccae22e.mp3"),
-    chime: new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_b3e0bfb44a.mp3"),
-    lock: new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_5a5b3c3c6d.mp3"),
-  };
-  for (let s in sounds) sounds[s].volume = 0.3;
+/* ======================
+   Resources / sounds
+   ====================== */
+/* Gentle sounds (public domain / pixabay small mp3s). Will work if user online. Volumes set low. */
+const soundFiles = {
+  chime: 'https://cdn.pixabay.com/audio/2022/03/15/audio_b3e0bfb44a.mp3',   // success
+  click: 'https://cdn.pixabay.com/audio/2022/03/15/audio_3c9ccae22e.mp3',   // click
+  lock:  'https://cdn.pixabay.com/audio/2022/03/15/audio_5a5b3c3c6d.mp3'    // locked / fail
+};
+const audio = {};
+for(const k in soundFiles){ audio[k] = new Audio(soundFiles[k]); audio[k].volume = 0.28; }
 
-  // === DATA ===
-  const state = {
-    lang: "en",
-    current: null,
-    users: {},
-    questions: {
-      en: [
-        { q: "What is the capital of France?", a: ["Paris", "Rome", "Madrid", "Berlin"], correct: 0 },
-      ],
-      es: [
-        { q: "¿Cuál es la capital de Francia?", a: ["París", "Roma", "Madrid", "Berlín"], correct: 0 },
-      ]
-    },
-    quotes: [
-      "The obstacle is the way. — Marcus Aurelius",
-      "You have power over your mind — not outside events.",
-      "We suffer more in imagination than in reality. — Seneca",
-      "Waste no more time arguing what a good man should be. Be one. — Marcus Aurelius",
-      "First say to yourself what you would be; and then do what you have to do. — Epictetus"
-    ]
-  };
+/* ======================
+   App data
+   ====================== */
+const STOIC_PHRASES_EN = [
+  "Focus only on what you can control.",
+  "Waste no more time arguing what a good person should be.",
+  "The impediment to action advances action.",
+  "We suffer more often in imagination than in reality.",
+  "He who fears death will never do anything worth doing."
+];
 
-  const langBtn = document.getElementById("langBtn");
-  const loading = document.getElementById("loading");
-  const quoteEl = document.getElementById("quote");
-  const app = document.getElementById("app");
-  const questionEl = document.getElementById("question");
-  const answersEl = document.getElementById("answers");
-  const nextBtn = document.getElementById("nextBtn");
+/* Bank: questions for topics. Each topic has list of objects {q:..., opts:[], a:index} in English.
+   We'll provide spanish translations via translateQToES/translateOptToES for the specific strings.
+*/
+const BANK = {
+  'Science': [
+    { q:'What is the basic unit of life?', opts:['Atom','Cell','Molecule','Organ'], a:1 },
+    { q:'Which gas do we mainly breathe?', opts:['Nitrogen','Oxygen','Hydrogen','Carbon dioxide'], a:1 },
+    { q:'What force keeps us on the ground?', opts:['Magnetism','Gravity','Friction','Electricity'], a:1 }
+  ],
+  'History': [
+    { q:'In which year did Columbus reach America?', opts:['1492','1502','1592','1392'], a:0 },
+    { q:'Who was the first President of the United States?', opts:['Thomas Jefferson','George Washington','Abraham Lincoln','John Adams'], a:1 }
+  ],
+  'Music': [
+    { q:'Which instrument has 88 keys?', opts:['Violin','Piano','Guitar','Flute'], a:1 },
+    { q:'Which clef is typically used for low-pitched instruments?', opts:['Treble clef','Alto clef','Bass clef','Soprano clef'], a:2 }
+  ],
+  'Art': [
+    { q:'Who painted the Mona Lisa?', opts:['Van Gogh','Leonardo da Vinci','Picasso','Rembrandt'], a:1 },
+    { q:'Which movement featured abstract forms and geometric shapes?', opts:['Impressionism','Cubism','Romanticism','Surrealism'], a:1 }
+  ],
+  'Astronomy': [
+    { q:'Which planet is known as the Red Planet?', opts:['Venus','Mars','Jupiter','Mercury'], a:1 },
+    { q:'What is the name of our galaxy?', opts:['Andromeda','Milky Way','Sombrero','Whirlpool'], a:1 }
+  ],
+  'Video Games': [
+    { q:'Which company makes the PlayStation?', opts:['Microsoft','Nintendo','Sony','Sega'], a:2 },
+    { q:'In classic Mario, what is the name of Mario’s brother?', opts:['Luigi','Wario','Toad','Bowser'], a:0 }
+  ]
+};
 
-  // === SHOW RANDOM STOIC QUOTE ===
-  quoteEl.textContent = state.quotes[Math.floor(Math.random() * state.quotes.length)];
+/* Minimal Spanish map for translations used (questions and options present above). Extend if needed. */
+const TRANSLATIONS_QS = {
+  "What is the basic unit of life?":"¿Cuál es la unidad básica de la vida?",
+  "What force keeps us on the ground?":"¿Qué fuerza nos mantiene en el suelo?",
+  "Which gas do we mainly breathe?":"¿Qué gas respiramos principalmente?",
+  "In which year did Columbus reach America?":"¿En qué año llegó Colón a América?",
+  "Who was the first President of the United States?":"¿Quién fue el primer presidente de Estados Unidos?",
+  "Which instrument has 88 keys?":"¿Qué instrumento tiene 88 teclas?",
+  "Which clef is typically used for low-pitched instruments?":"¿Qué clave se usa para instrumentos de tono bajo?",
+  "Who painted the Mona Lisa?":"¿Quién pintó la Mona Lisa?",
+  "Which movement featured abstract forms and geometric shapes?":"¿Qué movimiento presentó formas abstractas y geométricas?",
+  "Which planet is known as the Red Planet?":"¿Qué planeta se conoce como el Planeta Rojo?",
+  "What is the name of our galaxy?":"¿Cómo se llama nuestra galaxia?",
+  "Which company makes the PlayStation?":"¿Qué compañía fabrica la PlayStation?",
+  "In classic Mario, what is the name of Mario’s brother?":"En Mario clásico, ¿cómo se llama el hermano de Mario?"
+};
+const TRANSLATIONS_OPTS = {
+  "Atom":"Átomo","Cell":"Célula","Molecule":"Molécula","Organ":"Órgano",
+  "Nitrogen":"Nitrógeno","Oxygen":"Oxígeno","Hydrogen":"Hidrógeno","Carbon dioxide":"Dióxido de carbono",
+  "Gravity":"Gravedad","Magnetism":"Magnetismo","Friction":"Fricción","Electricity":"Electricidad",
+  "1492":"1492","1502":"1502","1592":"1592","1392":"1392",
+  "Thomas Jefferson":"Thomas Jefferson","George Washington":"George Washington","Abraham Lincoln":"Abraham Lincoln","John Adams":"John Adams",
+  "Violin":"Violín","Piano":"Piano","Guitar":"Guitarra","Flute":"Flauta",
+  "Treble clef":"Clave de Sol","Alto clef":"Clave de Do","Bass clef":"Clave de Fa","Soprano clef":"Clave de Soprano",
+  "Van Gogh":"Van Gogh","Leonardo da Vinci":"Leonardo da Vinci","Picasso":"Picasso","Rembrandt":"Rembrandt",
+  "Impressionism":"Impresionismo","Cubism":"Cubismo","Romanticism":"Romanticismo","Surrealism":"Surrealismo",
+  "Venus":"Venus","Mars":"Marte","Jupiter":"Júpiter","Mercury":"Mercurio",
+  "Andromeda":"Andrómeda","Milky Way":"Vía Láctea","Sombrero":"Sombrero","Whirlpool":"Remolino",
+  "Microsoft":"Microsoft","Nintendo":"Nintendo","Sony":"Sony","Sega":"Sega",
+  "Luigi":"Luigi","Wario":"Wario","Toad":"Toad","Bowser":"Bowser"
+};
 
-  // === LANGUAGE TOGGLE ===
-  langBtn.addEventListener("click", () => {
-    sounds.click.play();
-    state.lang = state.lang === "en" ? "es" : "en";
-    langBtn.textContent = state.lang.toUpperCase();
-    renderQuestion();
+/* ======================
+   State & storage
+   ====================== */
+const $ = id => document.getElementById(id);
+const todayKey = ()=>{ const d=new Date(); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; };
+
+let state = (()=>{
+  try { return JSON.parse(localStorage.getItem('quizzly_state')||'{}'); } catch(e){ return {}; }
+})();
+if(!state.users) state.users = {}; // username -> {history:[], lastAnsweredOn:'YYYY-M-D', streak:number, lastStreakDate: 'YYYY-M-D'}
+if(!state.current) state.current = { name:null, topic:null, lang:'en', muted:false };
+
+/* UI refs */
+const splash = $('splash'), splashPhrase = $('splashPhrase');
+const screenLogin = $('screen-login'), screenTopics = $('screen-topics'), screenQuiz = $('screen-quiz'), screenResult = $('screen-result'), screenHistory = $('screen-history');
+const inputName = $('inputName'), btnStart = $('btnStart'), btnGuest = $('btnGuest'), btnLogout = $('btnLogout'), btnLogout2 = $('btnLogout2');
+const topicsDiv = $('topics'), btnOpenQuiz = $('btnOpenQuiz'), btnHistory = $('btnHistory'), userShort = $('userShort');
+const questionText = $('questionText'), metaInfo = $('metaInfo'), optionsDiv = $('options'), statusText = $('statusText');
+const btnChangeTopic = $('btnChangeTopic'), btnBackHome = $('btnBackHome');
+const resultTitle = $('resultTitle'), resultMsg = $('resultMsg'), encourageText = $('encourageText'), streakText = $('streakText');
+const historyList = $('historyList'), btnBackToTopics = $('btnBackToTopics'), btnClearHistory = $('btnClearHistory');
+const btnEN = $('btnEN'), btnES = $('btnES'), subtitle = $('subtitle'), welcomeTitle = $('welcomeTitle'), welcomeMeta = $('welcomeMeta');
+const muteBtn = $('muteBtn'), footerText = $('footerText');
+
+/* ======================
+   Internationalization
+   ====================== */
+const I18N = {
+  en: {
+    welcome: "Welcome",
+    welcomeMeta: "Enter your name to start and save progress on this device.",
+    start: "Start",
+    guest: "Guest",
+    chooseTopic: "Choose a topic",
+    chooseMeta: "Select the category for today's question",
+    viewQuestion: "View question",
+    history: "History",
+    logout: "Logout",
+    change: "Change",
+    back: "Back",
+    clearHistory: "Clear history",
+    alreadyAnsweredTitle: "You've already answered today.",
+    alreadyAnsweredMsg: "Come back tomorrow for the next question.",
+    correctTitle: "Correct — well done!",
+    wrongTitle: "Not this time",
+    correctMsg: "You answered today's question correctly.",
+    wrongMsg: "Your answer was recorded. Try again tomorrow.",
+    loading: "Loading...",
+    historyEmpty: "No records yet.",
+    deleteConfirm: "Clear history for this user?",
+    logoutConfirm: "Are you sure you want to logout?",
+    finalEncourage: "Return tomorrow to continue your streak.",
+    streakLabel: "Streak"
+  },
+  es: {
+    welcome: "Bienvenido",
+    welcomeMeta: "Ingresa tu nombre para comenzar y guardar el progreso en este dispositivo.",
+    start: "Comenzar",
+    guest: "Invitado",
+    chooseTopic: "Elige un tema",
+    chooseMeta: "Selecciona la categoría para la pregunta de hoy",
+    viewQuestion: "Ver pregunta",
+    history: "Historial",
+    logout: "Cerrar sesión",
+    change: "Cambiar",
+    back: "Volver",
+    clearHistory: "Borrar historial",
+    alreadyAnsweredTitle: "Ya respondiste hoy.",
+    alreadyAnsweredMsg: "Vuelve mañana para la siguiente pregunta.",
+    correctTitle: "¡Correcto — bien hecho!",
+    wrongTitle: "No fue esta vez",
+    correctMsg: "Has respondido correctamente la pregunta de hoy.",
+    wrongMsg: "La respuesta fue registrada. Intenta mañana.",
+    loading: "Cargando...",
+    historyEmpty: "Sin registros aún.",
+    deleteConfirm: "¿Borrar historial de este usuario?",
+    logoutConfirm: "¿Cerrar sesión?",
+    finalEncourage: "Regresa mañana para continuar tu racha.",
+    streakLabel: "Racha"
+  }
+};
+
+function t(key){
+  const lang = state.current.lang || 'en';
+  return (I18N[lang] && I18N[lang][key]) || I18N['en'][key] || key;
+}
+
+/* ======================
+   Helpers: save/load
+   ====================== */
+function saveState(){ localStorage.setItem('quizzly_state', JSON.stringify(state)); }
+
+/* ======================
+   Splash & init
+   ====================== */
+function pickSplash(){ return STOIC_PHRASES_EN[Math.floor(Math.random()*STOIC_PHRASES_EN.length)]; }
+function showSplashThenInit(){
+  splashPhrase.textContent = pickSplash();
+  splash.style.display = 'flex';
+  if(!state.current.lang) state.current.lang = 'en';
+  // play gentle chime if not muted
+  setTimeout(()=>{ if(!state.current.muted) audio.chime.play().catch(()=>{}); }, 250);
+  setTimeout(()=>{ splash.style.display='none'; initApp(); }, 1700);
+}
+
+/* ======================
+   UI: translations and toggles
+   ====================== */
+function applyTranslations(){
+  welcomeTitle.textContent = t('welcome');
+  welcomeMeta.textContent = t('welcomeMeta');
+  btnStart.textContent = t('start');
+  btnGuest.textContent = t('guest');
+  $('chooseTitle').textContent = t('chooseTopic');
+  $('chooseMeta').textContent = t('chooseMeta');
+  btnOpenQuiz.textContent = t('viewQuestion');
+  btnHistory.textContent = t('history');
+  $('btnBackHome').textContent = t('back');
+  btnLogout.textContent = t('logout');
+  btnLogout2.textContent = t('logout');
+  btnChangeTopic.textContent = t('change');
+  btnBackToTopics.textContent = t('back');
+  btnClearHistory.textContent = t('clearHistory');
+  $('historyTitle').textContent = t('history');
+  $('historyMeta').textContent = t('history');
+  subtitle.textContent = t('chooseMeta');
+  footerText.textContent = 'Colegio Agropecuario de San Carlos — Diseño de Software — 2025';
+  // placeholder
+  inputName.setAttribute('placeholder', state.current.lang==='es' ? 'Tu nombre (ej. Judson)' : 'Your name (e.g. Judson)');
+  // splash phrase remains english per requirement
+}
+
+/* ======================
+   Topic rendering & selection
+   ====================== */
+const TOPIC_KEYS = ['Science','History','Music','Art','Astronomy','Video Games'];
+const TOPIC_LABELS_ES = {
+  'Science':'Ciencia','History':'Historia','Music':'Música','Art':'Arte','Astronomy':'Astronomía','Video Games':'Videojuegos'
+};
+
+function renderTopics(){
+  topicsDiv.innerHTML = '';
+  TOPIC_KEYS.forEach(k=>{
+    const d = document.createElement('div');
+    d.className = 'topic';
+    d.textContent = (state.current.lang==='es' ? (TOPIC_LABELS_ES[k]||k) : k);
+    if(state.current.topic === k) d.classList.add('selected');
+    d.onclick = ()=>{ state.current.topic = k; saveState(); renderTopics(); if(!state.current.muted) audio.click.play().catch(()=>{}); };
+    topicsDiv.appendChild(d);
+  });
+}
+
+/* ======================
+   Login / session
+   ====================== */
+function loginAs(name){
+  state.current.name = name;
+  if(!state.users[name]) state.users[name] = { history: [], lastAnsweredOn: '', streak:0, lastStreakDate: '' };
+  // if lastAnswered older than today, clear to allow respond
+  if(state.users[name].lastAnsweredOn && state.users[name].lastAnsweredOn !== todayKey()){
+    // keep history but allow respond
+  }
+  saveState();
+  renderApp();
+  showScreen(screenTopics);
+}
+
+function logout(){
+  if(confirm(t('logoutConfirm'))){
+    state.current = { name:null, topic:null, lang: state.current.lang || 'en', muted: state.current.muted || false };
+    saveState();
+    applyTranslations(); renderApp(); showScreen(screenLogin);
+  }
+}
+
+/* ======================
+   Utility: deterministic q per day & user
+   ====================== */
+function deterministicIndex(name, topic){
+  const pool = BANK[topic] || [];
+  if(pool.length===0) return 0;
+  const d = new Date(); const dayNum = d.getDate() + d.getMonth() + d.getFullYear();
+  let h = 0; const s = (name||'guest') + topic;
+  for(let i=0;i<s.length;i++){ h = ((h<<5)-h) + s.charCodeAt(i); h |= 0; }
+  const idx = Math.abs((Math.abs(h) + dayNum) % pool.length);
+  return idx;
+}
+
+/* ======================
+   Quiz: render & answer
+   ====================== */
+function hasAnsweredToday(name){
+  if(!name) return false;
+  const u = state.users[name];
+  return !!(u && u.lastAnsweredOn === todayKey());
+}
+
+function renderQuiz(){
+  if(!state.current.name) return alert(state.current.lang==='es'? 'Inicia sesión primero' : 'Please login first');
+  if(!state.current.topic) return alert(state.current.lang==='es'? 'Selecciona un tema' : 'Please choose a topic');
+
+  const topic = state.current.topic;
+  const pool = BANK[topic];
+  const qIdx = deterministicIndex(state.current.name, topic);
+  const q = pool[qIdx];
+
+  questionText.textContent = state.current.lang==='es' ? (TRANSLATIONS_QS[q.q]||q.q) : q.q;
+  metaInfo.textContent = `${state.current.lang==='es' ? (TOPIC_LABELS_ES[topic]||topic) : topic} • ${ state.current.lang==='es' ? 'Pregunta del día' : 'Question of the day' }`;
+
+  optionsDiv.innerHTML = '';
+  q.opts.forEach((opt,i)=>{
+    const b = document.createElement('div');
+    b.className = 'option';
+    b.tabIndex = 0;
+    b.textContent = state.current.lang==='es' ? (TRANSLATIONS_OPTS[opt]||opt) : opt;
+    b.onclick = ()=> selectAnswer(qIdx, i, q);
+    b.onkeypress = (e)=>{ if(e.key==='Enter') selectAnswer(qIdx, i, q); };
+    optionsDiv.appendChild(b);
   });
 
-  // === SIMULATE LOADING SCREEN ===
-  setTimeout(() => {
-    loading.classList.add("hidden");
-    app.classList.remove("hidden");
-    renderQuestion();
-  }, 2500);
-
-  // === CHECK LAST PLAY DATE ===
-  function hasPlayedToday() {
-    const last = localStorage.getItem("lastPlayed");
-    if (!last) return false;
-    const today = new Date().toDateString();
-    return last === today;
-  }
-
-  function markPlayedToday() {
-    localStorage.setItem("lastPlayed", new Date().toDateString());
-  }
-
-  // === RENDER QUESTION ===
-  function renderQuestion() {
-    const played = hasPlayedToday();
-    answersEl.innerHTML = "";
-    nextBtn.classList.add("hidden");
-
-    if (played) {
-      questionEl.textContent =
-        state.lang === "en"
-          ? "You’ve already answered today’s question. Come back tomorrow."
-          : "Ya respondiste la pregunta de hoy. Vuelve mañana.";
-      return;
-    }
-
-    const qData = state.questions[state.lang][0];
-    questionEl.textContent = qData.q;
-    qData.a.forEach((ans, i) => {
-      const btn = document.createElement("button");
-      btn.textContent = ans;
-      btn.onclick = () => checkAnswer(i, qData.correct);
-      answersEl.appendChild(btn);
-    });
-  }
-
-  // === CHECK ANSWER ===
-  function checkAnswer(selected, correct) {
-    sounds.click.play();
-    Array.from(answersEl.children).forEach((b, i) => {
-      b.disabled = true;
-      if (i === correct) b.style.background = "#4b8b3b";
-      if (i === selected && i !== correct) b.style.background = "#b03b3b";
-    });
-
-    if (selected === correct) {
-      sounds.chime.play();
-      nextBtn.textContent = state.lang === "en" ? "Great job!" : "¡Bien hecho!";
+  if(hasAnsweredToday(state.current.name)){
+    statusText.textContent = t('alreadyAnsweredMsg');
+    // mark last
+    const last = (state.users[state.current.name].history||[]).slice(-1)[0];
+    if(last && last.date === todayKey()){
+      const els = document.querySelectorAll('.option');
+      els.forEach((el, idx)=>{
+        el.classList.add('disabled');
+        if(idx === last.answer) el.classList.add('correct');
+        if(idx === last.chosen && !last.correct) el.classList.add('wrong');
+      });
     } else {
-      sounds.lock.play();
-      nextBtn.textContent = state.lang === "en" ? "Try again tomorrow." : "Inténtalo de nuevo mañana.";
+      document.querySelectorAll('.option').forEach(el=>el.classList.add('disabled'));
     }
-
-    markPlayedToday();
-    nextBtn.classList.remove("hidden");
+  } else {
+    statusText.textContent = '';
   }
+
+  showScreen(screenQuiz);
+}
+
+function selectAnswer(questionIdxInPool, chosenIndex, q){
+  if(hasAnsweredToday(state.current.name)){
+    alert(t('alreadyAnsweredTitle'));
+    return;
+  }
+  const pool = BANK[state.current.topic];
+  const realQ = pool[questionIdxInPool];
+  const correct = chosenIndex === realQ.a;
+
+  const optionEls = document.querySelectorAll('.option');
+  optionEls.forEach(el=>el.classList.add('disabled'));
+  optionEls[chosenIndex].classList.add(correct? 'correct' : 'wrong');
+  optionEls[realQ.a].classList.add('correct');
+
+  // save record
+  const record = { date: todayKey(), ts: new Date().toISOString(), topic: state.current.topic, question: realQ.q, chosen: chosenIndex, answer: realQ.a, correct };
+  state.users[state.current.name].history.push(record);
+  // streak logic
+  const user = state.users[state.current.name];
+  const yesterday = (()=>{ const d=new Date(); d.setDate(d.getDate()-1); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; })();
+  if(user.lastStreakDate === yesterday){ user.streak = (user.streak||0) + 1; } 
+  else {
+    // if lastStreakDate is today already keep, else reset
+    if(user.lastStreakDate === todayKey()){ /* keep */ }
+    else user.streak = 1;
+  }
+  user.lastStreakDate = todayKey();
+  user.lastAnsweredOn = todayKey();
+
+  saveState();
+  // sounds & result
+  if(!state.current.muted) { if(correct) audio.chime.play().catch(()=>{}); else audio.lock.play().catch(()=>{}); }
+  setTimeout(()=> showResultScreen(correct, state.current.topic, realQ.q), 700);
+}
+
+/* ======================
+   Results / Final screen
+   ====================== */
+function showResultScreen(correct, topic, questionTextStr){
+  resultTitle.textContent = correct ? t('correctTitle') : t('wrongTitle');
+  resultMsg.textContent = correct ? t('correctMsg') : t('wrongMsg');
+  const user = state.users[state.current.name] || { streak:0 };
+  streakText.textContent = `${ t('streakLabel') }: ${ user.streak || 0 } ${ state.current.lang==='es' ? 'días' : 'days' }`;
+  encourageText.textContent = t('finalEncourage');
+  showScreen(screenResult);
+}
+
+/* ======================
+   History / render
+   ====================== */
+function renderHistory(){
+  historyList.innerHTML = '';
+  if(!state.current.name || !state.users[state.current.name] || state.users[state.current.name].history.length===0){
+    const p = document.createElement('div'); p.className='meta'; p.textContent = t('historyEmpty'); historyList.appendChild(p); return;
+  }
+  const hist = state.users[state.current.name].history.slice().reverse();
+  hist.forEach(h=>{
+    const d = document.createElement('div'); d.className='hist-item';
+    const left = document.createElement('div'); left.className='hist-left';
+    const title = document.createElement('div'); title.className='hist-topic'; title.textContent = (state.current.lang==='es' ? (TOPIC_LABELS_ES[h.topic]||h.topic) : h.topic);
+    const qtiny = document.createElement('div'); qtiny.className='hist-when'; qtiny.textContent = (state.current.lang==='es') ? (TRANSLATIONS_QS[h.question]||h.question) : h.question;
+    left.appendChild(title); left.appendChild(qtiny);
+    const right = document.createElement('div'); right.style.textAlign='right';
+    const ok = document.createElement('div'); ok.textContent = h.correct ? (state.current.lang==='es' ? 'Correcto' : 'Correct') : (state.current.lang==='es' ? 'Incorrecto' : 'Incorrect');
+    const when = document.createElement('div'); when.className='hist-when'; when.textContent = new Date(h.ts).toLocaleString(state.current.lang==='es' ? 'es-CR' : 'en-US');
+    right.appendChild(ok); right.appendChild(when);
+    d.appendChild(left); d.appendChild(right);
+    historyList.appendChild(d);
+  });
+}
+
+/* ======================
+   Screens helper
+   ====================== */
+const screens = [screenLogin, screenTopics, screenQuiz, screenResult, screenHistory];
+function showScreen(el){
+  screens.forEach(s=>{ s.classList.remove('active'); s.setAttribute('aria-hidden','true'); });
+  el.classList.add('active'); el.setAttribute('aria-hidden','false');
+  // small pulse
+  const logo = document.querySelector('.logo'); if(logo){ logo.style.transform='scale(.98)'; setTimeout(()=>logo.style.transform='scale(1)',200); }
+}
+
+/* ======================
+   Language toggle
+   ====================== */
+function setLang(lang){
+  state.current.lang = lang; saveState();
+  if(lang==='en'){ btnEN.classList.add('active'); btnES.classList.remove('active'); btnEN.setAttribute('aria-pressed','true'); btnES.setAttribute('aria-pressed','false'); }
+  else { btnES.classList.add('active'); btnEN.classList.remove('active'); btnES.setAttribute('aria-pressed','true'); btnEN.setAttribute('aria-pressed','false'); }
+  applyTranslations();
+  renderTopics();
+  if(state.current.name) renderApp();
+}
+
+/* ======================
+   Mute toggle
+   ====================== */
+muteBtn.addEventListener('click', ()=>{
+  state.current.muted = !state.current.muted; saveState();
+  muteBtn.textContent = state.current.muted ? '🔕' : '🔔';
+});
+
+/* ======================
+   Main render & init
+   ====================== */
+function renderApp(){
+  userShort.textContent = state.current.name || '';
+  applyTranslations();
+  renderTopics();
+  // show topics if logged, else login
+  if(state.current.name){
+    const u = state.users[state.current.name] || { lastAnsweredOn:'' };
+    if(u.lastAnsweredOn && u.lastAnsweredOn === todayKey()){
+      // show final/result to indicate already played
+      const last = (u.history || []).slice(-1)[0];
+      if(last) showResultScreen(last.correct, last.topic, last.question);
+      else showScreen(screenTopics);
+    } else showScreen(screenTopics);
+  } else showScreen(screenLogin);
+}
+
+/* ======================
+   Event listeners
+   ====================== */
+btnStart.addEventListener('click', ()=>{ const n = inputName.value.trim(); if(!n) return alert(state.current.lang==='es' ? 'Escribe tu nombre' : 'Please enter your name'); loginAs(n); if(!state.current.muted) audio.click.play().catch(()=>{}); });
+btnGuest.addEventListener('click', ()=> loginAs(state.current.lang==='es' ? 'Invitado' : 'Guest'));
+btnLogout.addEventListener('click', logout); btnLogout2.addEventListener('click', logout);
+
+btnOpenQuiz.addEventListener('click', ()=> {
+  if(!state.current.topic) return alert(state.current.lang==='es' ? 'Selecciona un tema primero' : 'Please select a topic first');
+  const u = state.users[state.current.name] || { lastAnsweredOn: '' };
+  if(u.lastAnsweredOn && u.lastAnsweredOn === todayKey()){
+    const last = (u.history||[]).slice(-1)[0];
+    if(last) showResultScreen(last.correct, last.topic, last.question);
+    else showScreen(screenTopics);
+  } else renderQuiz();
+});
+btnHistory.addEventListener('click', ()=> { renderHistory(); showScreen(screenHistory); });
+btnBackToTopics.addEventListener('click', ()=> showScreen(screenTopics));
+btnClearHistory.addEventListener('click', ()=> {
+  if(!state.current.name) return;
+  if(confirm(t('deleteConfirm'))){
+    state.users[state.current.name].history = []; state.users[state.current.name].streak = 0; state.users[state.current.name].lastAnsweredOn=''; saveState(); renderHistory();
+  }
+});
+btnChangeTopic.addEventListener('click', ()=> showScreen(screenTopics));
+btnBackHome.addEventListener('click', ()=> { renderApp(); showScreen(screenTopics); });
+
+btnEN.addEventListener('click', ()=> setLang('en'));
+btnES.addEventListener('click', ()=> setLang('es'));
+
+/* Accessibility: Enter submits name */
+inputName.addEventListener('keypress',(e)=>{ if(e.key==='Enter') btnStart.click(); });
+
+/* ======================
+   Startup
+   ====================== */
+(function startup(){
+  // set defaults if missing
+  if(!state.current.lang) state.current.lang='en';
+  if(state.current.lang === 'en'){ btnEN.classList.add('active'); btnES.classList.remove('active'); } else { btnES.classList.add('active'); btnEN.classList.remove('active'); }
+  muteBtn.textContent = state.current.muted ? '🔕' : '🔔';
+  applyTranslations();
+  // splash with english stoic phrase
+  showSplashThenInit();
+})();
+
+/* save on unload */
+window.addEventListener('beforeunload', saveState);
 </script>
 </body>
 </html>
